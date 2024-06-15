@@ -1,13 +1,18 @@
 package com.projectapi.Project_NIC.repository;
 
-import com.projectapi.Project_NIC.model.Document;
+import com.projectapi.Project_NIC.model.ClientDocument;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public interface DocumentRepository extends MongoRepository<Document, UUID> {
-    @Query("{ 'client_id': ?0 }")
-    List<Document> findByClientId(String client_id);
+public interface DocumentRepository extends MongoRepository<ClientDocument, UUID> {
+    @Query("{'created_for.person_id': ?0}")
+    List<ClientDocument> findByPersonId(int personId);
+
+    @Query("{'file_information.application_transaction_id' :  ?0}")
+    Optional<ClientDocument> findByApplicationTransactionId(long applicationId);
+
 }

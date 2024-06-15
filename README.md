@@ -1,1 +1,1 @@
-This an API backend project of Document Framework System using Java Springboot. Using this API users can register and store their documents & also they can view or retrieve the document and also review it.
+This an API backend project of Document Framework System using Java Springboot. Using this API users can register and store their clientDocuments & also they can view or retrieve the clientDocument and also review it.
