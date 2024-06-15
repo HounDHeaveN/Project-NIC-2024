@@ -2,25 +2,32 @@ package com.projectapi.Project_NIC.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+@Setter
+@Getter
 @Data
 @Builder
-@Document(collection = "users")
+@Document(collection = "clients")
 public class UserEntity implements UserDetails {
-    private String username;
-    private String password;
+    private String clientId;
+    private String client_secret;
+    private Date created_on;
+    private Date expiry_on;
 
     private Role role;
 
     public String getUsername() {
-        return username;
+        return clientId;
     }
 
     @Override
@@ -44,7 +51,7 @@ public class UserEntity implements UserDetails {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.clientId = username;
     }
 
     @Override
@@ -53,19 +60,13 @@ public class UserEntity implements UserDetails {
     }
 
     public String getPassword() {
-        return password;
+        return client_secret;
+
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.client_secret = password;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }
 
