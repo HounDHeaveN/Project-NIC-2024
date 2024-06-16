@@ -3,6 +3,7 @@ package com.projectapi.Project_NIC.service;
 import com.projectapi.Project_NIC.model.ArchiveDocument;
 import com.projectapi.Project_NIC.model.ClientDocument;
 
+import com.projectapi.Project_NIC.model.PdfPasswordRequest;
 import com.projectapi.Project_NIC.model.Review;
 import com.projectapi.Project_NIC.repository.ArchiveRepository;
 import com.projectapi.Project_NIC.repository.DocumentRepository;
@@ -10,6 +11,8 @@ import com.projectapi.Project_NIC.repository.ReviewRepository;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
+import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.util.Matrix;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,19 +99,14 @@ public class DocumentService {
         return archiveRepository.save(archiveDocument);
     }
 
-
-//    public String deleteDocument(UUID documentId) {
-//        ClientDocument document = documentRepository.findById(documentId)
-//                .orElseThrow(() -> new RuntimeException("Document not found"));
-//
-//        mongoTemplate.save(document, "archive_documents");
-//        LOGGER.info("Document archived successfully with ID: " + documentId);
-//
-//        documentRepository.deleteById(documentId);
-//        LOGGER.info("Document deleted successfully with ID: " + documentId);
-//
-//        return "Document archived successfully";
-//    }
+    public void deleteDocumentById(UUID documentId) {
+        documentRepository.deleteById(documentId);
+    }
+    public ClientDocument updateDocument(ClientDocument document) {
+        Date date = new Date();
+        document.setCreated_on(date);
+        return documentRepository.save(document);
+    }
 
     public ClientDocument addWatermarkToDocument(long applicationTransactionId, String watermark) throws IOException {
         Optional<ClientDocument> existingDocument = documentRepository.findByApplicationTransactionId(applicationTransactionId);
@@ -129,7 +127,7 @@ public class DocumentService {
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 50);
             contentStream.setNonStrokingColor(200, 200, 200);    //Light Grey colour
             contentStream.beginText();
-            contentStream.setTextMatrix(Matrix.getRotateInstance(Math.toRadians(45), 200, 400));  // adjust the position and angle as required
+            contentStream.setTextMatrix(Matrix.getRotateInstance(Math.toRadians(45), 500, 400));  // adjust the position and angle as required
             contentStream.newLineAtOffset(100,300);
             contentStream.showText(watermark);
             contentStream.endText();
@@ -162,4 +160,45 @@ public class DocumentService {
     public Optional<ArchiveDocument> getArchiveDocumentByApplicationTransactionId(long applicationTransactionId) {
         return archiveRepository.findByApplicationTransactionId(applicationTransactionId);
     }
+
+
+    public String addPasswordToPdf(PdfPasswordRequest request) throws IOException {
+        Optional<ClientDocument> existingDocument = documentRepository.findByApplicationTransactionId(request.getApplicationTransactionId());
+
+        if (!existingDocument.isPresent()) {
+            throw new IOException("Document not found");
+        }
+
+        ClientDocument clientDocument = existingDocument.get();
+
+        byte[] pdfBytes = Base64.getDecoder().decode(clientDocument.getDocument().getActual_document_base_64());
+
+        PDDocument document = PDDocument.load(new ByteArrayInputStream(pdfBytes));
+
+        // Set the password protection
+        AccessPermission accessPermission = new AccessPermission();
+        StandardProtectionPolicy protectionPolicy = new StandardProtectionPolicy(
+                request.getPassword(), request.getPassword(), accessPermission);
+
+        // Customize the protection policy if necessary
+        protectionPolicy.setEncryptionKeyLength(128);  // 128-bit key length
+        protectionPolicy.setPermissions(accessPermission);
+        document.protect(protectionPolicy);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        document.save(outputStream);
+        document.close();
+
+        String base64PdfWithPassword = Base64.getEncoder().encodeToString(outputStream.toByteArray());
+
+        // Update the ClientDocument with the new Base64 content
+        clientDocument.getDocument().setActual_document_base_64(base64PdfWithPassword);
+
+        // Save the updated ClientDocument
+        documentRepository.save(clientDocument);
+
+        return base64PdfWithPassword;
+    }
+
+
 }
