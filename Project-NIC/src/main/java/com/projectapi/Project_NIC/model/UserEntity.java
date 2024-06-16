@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Data
 @Builder
-@Document(collection = "clients")
+@Document(collection = "client")
 public class UserEntity implements UserDetails {
     private String clientId;
     private String client_secret;

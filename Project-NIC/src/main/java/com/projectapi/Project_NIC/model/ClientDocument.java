@@ -24,12 +24,12 @@ public class ClientDocument {
     private Application application;
     private Module module;
     private Workflow workflow;
-    private FileInformation fileInformation;
-    private CreatedBy createdBy;
-    private CreatedFor createdFor;
+    private FileInformation file_information;
+    private CreatedBy created_by;
+    private CreatedFor created_for;
     private DocumentContent document;
-    private AdditionalInfo additionalInfo1;
-    private AdditionalInfo additionalInfo2;
+    private AdditionalInfo additional_info_1;
+    private AdditionalInfo additional_info_2;
 
     @Data
     @Builder
