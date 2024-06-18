@@ -9,13 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "Review_document")
+@Document(collection = "reviews")
 public class Review {
 
-    @Id
-    private String id;
-    private long applicationTransactionId;
+    private long application_transaction_id;
     private String review;
-
 
 }

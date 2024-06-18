@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WatermarkRequest {
 
-    private long applicationTransactionId;
+    private long application_transaction_id;
     private String watermark;
 }

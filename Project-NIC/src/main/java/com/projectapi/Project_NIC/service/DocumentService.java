@@ -72,7 +72,7 @@ public class DocumentService {
     }
 
     public Review saveOrUpdateReview(Review review) {
-        Optional<Review> existingReview = reviewRepository.findByApplicationTransactionId(review.getApplicationTransactionId());
+        Optional<Review> existingReview = reviewRepository.findByApplicationTransactionId(review.getApplication_transaction_id());
 
         if (existingReview.isPresent()) {
             Review existing = existingReview.get();
@@ -86,8 +86,8 @@ public class DocumentService {
 
     public ArchiveDocument archiveDocument(ArchiveDocument archiveDocument) {
 
-        Optional<ArchiveDocument> existingArchive = archiveRepository.findByApplicationTransactionId(archiveDocument.getApplicationTransactionId());
-        Optional<ClientDocument> archivedDocument = documentRepository.findByApplicationTransactionId(archiveDocument.getApplicationTransactionId());
+        Optional<ArchiveDocument> existingArchive = archiveRepository.findByApplicationTransactionId(archiveDocument.getApplication_transaction_id());
+        Optional<ClientDocument> archivedDocument = documentRepository.findByApplicationTransactionId(archiveDocument.getApplication_transaction_id());
 
         if (existingArchive.isPresent()) {
             ArchiveDocument archivedoc = existingArchive.get();
@@ -164,21 +164,21 @@ public class DocumentService {
 
 
 
-    public Optional<Review> getReviewByApplicationTransactionId(long applicationTransactionId) {
+    public Optional<Review> viewReviewLog(long applicationTransactionId) {
         return reviewRepository.findByApplicationTransactionId(applicationTransactionId);
     }
 
 
 
-    public Optional<ArchiveDocument> getArchiveDocumentByApplicationTransactionId(long applicationTransactionId) {
+    public Optional<ArchiveDocument> viewEditLog(long applicationTransactionId) {
         return archiveRepository.findByApplicationTransactionId(applicationTransactionId);
     }
 
 
     public String addPasswordToPdf(PdfPasswordRequest request) throws IOException {
-        Optional<ClientDocument> existingDocument = documentRepository.findByApplicationTransactionId(request.getApplicationTransactionId());
+        Optional<ClientDocument> existingDocument = documentRepository.findByApplicationTransactionId(request.getApplication_transaction_id());
 
-        if (!existingDocument.isPresent()) {
+        if (existingDocument.isEmpty()) {
             throw new IOException("Document not found");
         }
 

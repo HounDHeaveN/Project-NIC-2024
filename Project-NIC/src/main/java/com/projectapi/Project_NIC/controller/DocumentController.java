@@ -59,10 +59,10 @@ public class DocumentController {
     //to review the client's document
     @PostMapping("/reviewdocument")
     public ResponseEntity<?> saveOrUpdateReview(@RequestBody Review review) {
-        Optional<ClientDocument> clientdocumentOptional = documentRepository.findByApplicationTransactionId(review.getApplicationTransactionId());
+        Optional<ClientDocument> clientdocumentOptional = documentRepository.findByApplicationTransactionId(review.getApplication_transaction_id());
 
         if (clientdocumentOptional.isPresent()) {
-            review.setApplicationTransactionId(clientdocumentOptional.get().getFile_information().getApplication_transaction_id());
+            review.setApplication_transaction_id(clientdocumentOptional.get().getFile_information().getApplication_transaction_id());
             Review savedReview = documentService.saveOrUpdateReview(review);
 
             return ResponseEntity.ok(savedReview);
@@ -75,7 +75,7 @@ public class DocumentController {
     //to archive any document
     @PostMapping("/archivedocument")
     public ResponseEntity<?> archiveDocument(@RequestBody ArchiveDocument archiveDocument) {
-        Optional<ClientDocument> clientDocumentOptional = documentRepository.findByApplicationTransactionId(archiveDocument.getApplicationTransactionId());
+        Optional<ClientDocument> clientDocumentOptional = documentRepository.findByApplicationTransactionId(archiveDocument.getApplication_transaction_id());
 
         if (clientDocumentOptional.isPresent()) {
             ArchiveDocument savedArchiveDocument = documentService.archiveDocument(archiveDocument);
@@ -107,7 +107,7 @@ public class DocumentController {
     // to view list of review section
     @GetMapping("/viewreviewlog/{applicationTransactionId}")
     public ResponseEntity<Review> getReviewByApplicationId(@PathVariable long applicationTransactionId) {
-        Optional<Review> reviewOptional = documentService.getReviewByApplicationTransactionId(applicationTransactionId);
+        Optional<Review> reviewOptional = documentService.viewReviewLog(applicationTransactionId);
 
         return reviewOptional
                 .map(ResponseEntity::ok)
@@ -118,7 +118,7 @@ public class DocumentController {
     //to view list of edited document setion
     @GetMapping("/vieweditlog/{applicationTransactionId}")
     public ResponseEntity<ArchiveDocument> getArchiveDocumentByApplicationTransactionId(@PathVariable long applicationTransactionId) {
-        Optional<ArchiveDocument> archiveDocumentOptional = documentService.getArchiveDocumentByApplicationTransactionId(applicationTransactionId);
+        Optional<ArchiveDocument> archiveDocumentOptional = documentService.viewEditLog(applicationTransactionId);
 
         return archiveDocumentOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -127,7 +127,7 @@ public class DocumentController {
     @PostMapping("/addwatermarktodocument")
     public ResponseEntity<?> addWatermarkToDocument(@RequestBody WatermarkRequest watermarkRequest){
         try {
-            ClientDocument updatedDocument = documentService.addWatermarkToDocument(watermarkRequest.getApplicationTransactionId(),
+            ClientDocument updatedDocument = documentService.addWatermarkToDocument(watermarkRequest.getApplication_transaction_id(),
                     watermarkRequest.getWatermark());
             return new ResponseEntity<>(updatedDocument, HttpStatus.OK);
         } catch (IOException e) {
