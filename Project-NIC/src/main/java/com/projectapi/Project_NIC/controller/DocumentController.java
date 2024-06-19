@@ -45,7 +45,7 @@ public class DocumentController {
     }
 
     //to get a document of particular client
-    @GetMapping("/documentof/{personId}")
+    @GetMapping("/documentofaperson/{personId}")
     public ResponseEntity<List<ClientDocument>> getDocumentsByPersonId(@PathVariable("personId") int personId) {
         List<ClientDocument> documents = documentService.getDocumentsByPersonId(personId);
 

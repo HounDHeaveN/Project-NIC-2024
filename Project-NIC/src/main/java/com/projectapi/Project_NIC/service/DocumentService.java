@@ -14,6 +14,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.util.Matrix;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,7 +139,7 @@ public class DocumentService {
 
             //calculating middle coordinates
             float centerX = (pageWidth - stringWidth) / 2;
-            float centerY = (pageHeight - stringHeight) / 2;
+            float centerY = (pageHeight - stringHeight) / 3;
 
             contentStream.beginText();
             contentStream.setTextMatrix(Matrix.getRotateInstance(Math.toRadians(45), centerX, centerY));  // adjust the position and angle as required
@@ -161,6 +162,8 @@ public class DocumentService {
         return clientDocument;
 
     }
+
+
 
 
 
