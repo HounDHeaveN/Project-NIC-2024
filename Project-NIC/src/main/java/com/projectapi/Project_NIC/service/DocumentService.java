@@ -129,7 +129,7 @@ public class DocumentService {
             float pageWidth = pageSize.getWidth();
             float pageHeight = pageSize.getHeight();
 
-            PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true);
+            PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.PREPEND, true, true);
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 70);
             contentStream.setNonStrokingColor(200, 200, 200);    //Light Grey colour
 
