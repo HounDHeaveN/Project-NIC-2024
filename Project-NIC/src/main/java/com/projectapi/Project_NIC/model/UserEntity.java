@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +20,8 @@ import java.util.List;
 @Builder
 @Document(collection = "client")
 public class UserEntity implements UserDetails {
+
+    @Id
     private String client_id;
     private String client_secret;
     private Date created_on;
