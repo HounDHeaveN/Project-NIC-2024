@@ -5,8 +5,8 @@ import com.projectapi.Project_NIC.auth.AuthenticationResponse;
 import com.projectapi.Project_NIC.auth.RegisterRequest;
 import com.projectapi.Project_NIC.filter.JwtService;
 import com.projectapi.Project_NIC.model.Role;
-import com.projectapi.Project_NIC.model.UserEntity;
-import com.projectapi.Project_NIC.repository.UserRepository;
+import com.projectapi.Project_NIC.model.Client;
+import com.projectapi.Project_NIC.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +20,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
+    private final ClientRepository clientRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -33,14 +33,14 @@ public class AuthenticationService {
         calendar.add(Calendar.YEAR, 1);
         Date expiryDate = calendar.getTime();
 
-        var user = UserEntity.builder()
+        var user = Client.builder()
                 .client_id(request.getClient_id())
                 .client_secret(passwordEncoder.encode(request.getClient_secret()))
                 .created_on(date)
                 .expiry_on(expiryDate)
                 .role(Role.USER)
                 .build();
-        userRepository.save(user);
+        clientRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
@@ -49,7 +49,7 @@ public class AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getClient_id(), request.getClient_secret())
         );
-        var user = userRepository.findByClientId(request.getClient_id()).orElseThrow();
+        var user = clientRepository.findByClientId(request.getClient_id()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }

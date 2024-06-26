@@ -1,12 +1,13 @@
 package com.projectapi.Project_NIC.repository;
 
-import com.projectapi.Project_NIC.model.UserEntity;
+import com.projectapi.Project_NIC.model.Client;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.util.Optional;
 
-public interface UserRepository extends MongoRepository<UserEntity, String> {
+public interface ClientRepository extends MongoRepository<Client, String> {
     @Query("{'client_id': ?0}")
-    Optional<UserEntity> findByClientId(String client_id);
+    Optional<Client> findByClientId(String client_id);
+    Optional<Client> findByMobileNo(long mobileNo);
 }

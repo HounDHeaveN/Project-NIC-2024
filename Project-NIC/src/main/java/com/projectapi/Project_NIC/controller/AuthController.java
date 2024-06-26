@@ -3,7 +3,7 @@ package com.projectapi.Project_NIC.controller;
 import com.projectapi.Project_NIC.auth.AuthenticationRequest;
 import com.projectapi.Project_NIC.auth.AuthenticationResponse;
 import com.projectapi.Project_NIC.auth.RegisterRequest;
-import com.projectapi.Project_NIC.repository.UserRepository;
+import com.projectapi.Project_NIC.repository.ClientRepository;
 import com.projectapi.Project_NIC.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,11 +21,11 @@ public class AuthController {
     private final AuthenticationService service;
 
 
-    private final UserRepository userRepository;
+    private final ClientRepository clientRepository;
 
     @PostMapping("/init")
     public ResponseEntity<AuthenticationResponse> init(@RequestBody AuthenticationRequest request){
-        if(userRepository.findByClientId(request.getClient_id()).isPresent()){
+        if(clientRepository.findByClientId(request.getClient_id()).isPresent()){
             try {
                 AuthenticationResponse response = service.authenticate(request);
                 return new ResponseEntity<>(response, HttpStatus.OK);
