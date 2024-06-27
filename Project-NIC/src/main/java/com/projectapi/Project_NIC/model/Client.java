@@ -1,5 +1,6 @@
 package com.projectapi.Project_NIC.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -23,7 +24,9 @@ import java.util.List;
 public class Client implements UserDetails {
 
     @Id
+    @JsonIgnore
     private String client_id;
+    @JsonIgnore
     private String client_secret;
     private Date created_on;
     private Date expiry_on;
@@ -39,6 +42,7 @@ public class Client implements UserDetails {
     private String address;
 
     private Role role;
+
 
     public String getUsername() {
         return client_id;
@@ -72,6 +76,7 @@ public class Client implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
+
 
     public String getPassword() {
         return client_secret;
