@@ -43,7 +43,7 @@ public class Client implements UserDetails {
 
     private Role role;
 
-
+    @JsonIgnore
     public String getUsername() {
         return client_id;
     }
@@ -77,7 +77,7 @@ public class Client implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-
+    @JsonIgnore
     public String getPassword() {
         return client_secret;
 
